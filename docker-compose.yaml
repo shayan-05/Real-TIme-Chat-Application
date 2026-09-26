@@ -1,0 +1,23 @@
+services:
+  backend:
+    build: .
+    container_name: chat-backend
+    ports: 
+    - "8000:8000"
+    env_file:
+    - .env
+    depends_on: 
+    - redis
+
+  redis:
+    image: redis:7.4-alpine
+    container_name: chat-redis
+    restart: unless-stopped
+    ports:
+    - "6379:6379"
+    command: redis-server --save 200 1 --loglevel warning --requirepass ${REDIS_PASSWORD}
+    volumes:
+    - redis_data:/data
+
+volumes:
+  redis_data:
